@@ -131,6 +131,8 @@ type Track struct {
 	Pregap *Time
 	// Length of the track postgap.
 	Postgap *Time
+	// Comments.
+	Comments []string
 }
 
 // Audio file representation structure.

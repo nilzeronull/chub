@@ -345,7 +345,16 @@ func parsePregap(params []string, sheet *Sheet) error {
 
 // parseRem parsers REM command.
 func parseRem(params []string, sheet *Sheet) error {
-	sheet.Comments = append(sheet.Comments, strings.Join(params, " "))
+	comment := strings.Join(params, " ")
+	track := getCurrentTrack(sheet)
+
+	if track == nil {
+		// Comment for the CD disk.
+		sheet.Comments = append(sheet.Comments, comment)
+	} else {
+		// Comment for the track.
+		track.Comments = append(track.Comments, comment)
+	}
 
 	return nil
 }
