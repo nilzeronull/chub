@@ -33,6 +33,8 @@ type Sheet struct {
 	CdTextFile string
 	// Data/audio files descibed byt the cue-file.
 	Files []*File
+
+	flags int
 }
 
 // Type of the audio file.

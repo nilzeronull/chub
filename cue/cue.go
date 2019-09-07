@@ -59,20 +59,25 @@ var parsersMap = map[string]commandParserDescriptor{
 	"TRACK":      {2, parseTrack},
 }
 
+const (
+	// FlagTruncateStrings enables 80-char string truncation to conform the specification.
+	FlagTruncateStrings = 1 << iota
+)
+
 // ParseFile parses cue-sheet tile.
-func ParseFile(filename string) (sheet *Sheet, err error) {
+func ParseFile(filename string, flags int) (sheet *Sheet, err error) {
 	file, err := os.Open(filename)
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	return Parse(file)
+	return Parse(file, flags)
 }
 
 // Parse parses cue-sheet data from reader and returns filled Sheet struct.
-func Parse(reader io.Reader) (sheet *Sheet, err error) {
-	sheet = &Sheet{}
+func Parse(reader io.Reader, flags int) (sheet *Sheet, err error) {
+	sheet = &Sheet{flags: flags}
 
 	rd := bufio.NewReader(reader)
 	lineNumber := 1
@@ -290,8 +295,7 @@ func parseIsrc(params []string, sheet *Sheet) error {
 
 // parsePerformer parsers PERFORMER command.
 func parsePerformer(params []string, sheet *Sheet) error {
-	// Limit this field length up to 80 characters.
-	performer := stringTruncate(params[0], 80)
+	performer := sheet.stringTruncateMaybe(params[0], 80)
 	track := getCurrentTrack(sheet)
 
 	if track == nil {
@@ -361,8 +365,7 @@ func parseRem(params []string, sheet *Sheet) error {
 
 // parseSongWriter parsers SONGWRITER command.
 func parseSongWriter(params []string, sheet *Sheet) error {
-	// Limit this field length up to 80 characters.
-	songwriter := stringTruncate(params[0], 80)
+	songwriter := sheet.stringTruncateMaybe(params[0], 80)
 	track := getCurrentTrack(sheet)
 
 	if track == nil {
@@ -376,8 +379,7 @@ func parseSongWriter(params []string, sheet *Sheet) error {
 
 // parseTitle parsers TITLE command.
 func parseTitle(params []string, sheet *Sheet) error {
-	// Limit this field length up to 80 characters.
-	title := stringTruncate(params[0], 80)
+	title := sheet.stringTruncateMaybe(params[0], 80)
 	track := getCurrentTrack(sheet)
 
 	if track == nil {

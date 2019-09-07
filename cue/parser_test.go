@@ -77,15 +77,15 @@ type timeExpected struct {
 
 func TestParseTime(t *testing.T) {
 	var tests = map[string]timeExpected{
-		"01:02:03": timeExpected{1, 2, 3},
-		"11:22:33": timeExpected{11, 22, 33},
-		"14:00:00": timeExpected{14, 0, 0},
+		"01:02:03": {1, 2, 3},
+		"11:22:33": {11, 22, 33},
+		"14:00:00": {14, 0, 0},
 	}
 
 	for input, expected := range tests {
 		min, sec, frames, err := parseTime(input)
 		if err != nil {
-			t.Fatalf("Time parsing failed. Input string: '%s'. %", input, err)
+			t.Fatalf("Time parsing failed. Input string: '%s'. %s", input, err)
 		}
 
 		if min != expected.min {

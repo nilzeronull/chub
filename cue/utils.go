@@ -17,10 +17,11 @@
 
 package cue
 
-// stringTruncate truncates string up to newLen characters.
+// stringTruncateMaybe truncates string up to newLen characters if string truncation
+// is enabled.
 // If given string is shorter than newLen if will be returned without any changes.
-func stringTruncate(str string, newLen int) string {
-	if len(str) > newLen {
+func (sheet *Sheet) stringTruncateMaybe(str string, newLen int) string {
+	if len(str) > newLen && (sheet.flags&FlagTruncateStrings) != 0 {
 		return str[:newLen]
 	}
 

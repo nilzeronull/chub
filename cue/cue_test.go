@@ -39,7 +39,7 @@ const (
 func TestPackage(t *testing.T) {
 	filename := "test.cue"
 
-	sheet, err := ParseFile(filename)
+	sheet, err := ParseFile(filename, 0)
 	if err != nil {
 		t.Fatalf("Failed to parse file. %s", err)
 	}
