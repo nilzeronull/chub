@@ -145,6 +145,7 @@ func parseCdTextFile(params []string, sheet *Sheet) error {
 }
 
 func parseFileType(t string) (FileType, error) {
+	t = strings.ToTitle(t)
 	switch t {
 	case "BINARY":
 		return FileTypeBinary, nil
