@@ -26,6 +26,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"regexp"
 	"strconv"
@@ -236,9 +237,10 @@ func parseIndex(params []string, sheet *Sheet) error {
 	}
 
 	// The first index of a file must start at 00:00:00.
+	// Ignore this error, some CUE sheets don't have it
 	if getFileLastIndex(getCurrentFile(sheet)) == nil {
 		if min+sec+frames != 0 {
-			return errors.New("00:00:00 time value expected.")
+			log.Printf("INDEX 00 00:00:00 missing")
 		}
 	}
 
