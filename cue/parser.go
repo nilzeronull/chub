@@ -170,8 +170,14 @@ func parseTime(length string) (min int, sec int, frames int, err error) {
 		return
 	}
 	if frames > 74 {
-		err = illegalTimeFormatError
-		return
+		if frames > 99 {
+			err = illegalTimeFormatError
+			return
+		}
+		// Some Tools generate sloppy frame counts
+		// Use remainder for frames but increment seconds
+		frames = frames % 74
+		sec++
 	}
 
 	return
